@@ -1,4 +1,4 @@
-package com.github.leuvaarden.testgenericresponse.dto;
+package com.github.leuvaarden.sample.dto;
 
 import org.springframework.util.Assert;
 

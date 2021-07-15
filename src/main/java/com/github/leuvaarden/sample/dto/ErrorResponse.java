@@ -1,4 +1,4 @@
-package com.github.leuvaarden.testgenericresponse.dto;
+package com.github.leuvaarden.sample.dto;
 
 import org.springframework.util.Assert;
 
@@ -51,6 +51,15 @@ public class ErrorResponse<T> implements Response<T> {
 
         public String getMessage() {
             return message;
+        }
+
+        @Override
+        public String toString() {
+            return "ErrorHolder{" +
+                    "code='" + code + '\'' +
+                    ", description='" + description + '\'' +
+                    ", message='" + message + '\'' +
+                    '}';
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.github.leuvaarden.testgenericresponse.dto;
+package com.github.leuvaarden.sample.dto;
 
 public interface Response<T> {
     boolean getSuccess();
