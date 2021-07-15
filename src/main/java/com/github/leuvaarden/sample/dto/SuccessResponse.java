@@ -1,18 +1,16 @@
 package com.github.leuvaarden.sample.dto;
 
-import org.springframework.util.Assert;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
+@Data
+@AllArgsConstructor
 public class SuccessResponse<T> implements Response<T> {
 
     @NotNull
     private final T data;
-
-    public SuccessResponse(@NotNull T data) {
-        Assert.notNull(data, "Data is null");
-        this.data = data;
-    }
 
     @Override
     public boolean getSuccess() {

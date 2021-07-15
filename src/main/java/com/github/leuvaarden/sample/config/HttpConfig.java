@@ -5,9 +5,11 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
+import org.apache.http.impl.client.cache.CacheConfig;
+import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -20,6 +22,7 @@ import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 
 @Configuration
+@EnableCaching
 public class HttpConfig {
 
     @Value("${http.timeout.connect:10S}")
@@ -42,7 +45,8 @@ public class HttpConfig {
 
     @Bean
     public HttpClient httpClient(SSLContext sslContext) throws NoSuchAlgorithmException {
-        return HttpClientBuilder.create()
+        return CachingHttpClientBuilder.create()
+                .setCacheConfig(CacheConfig.DEFAULT)
                 .useSystemProperties()
                 .setRetryHandler(countRetry == 0 ? null : new StandardHttpRequestRetryHandler(countRetry, true))
                 .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(Math.toIntExact(timeoutConnect.toMillis())).setConnectionRequestTimeout(Math.toIntExact(timeoutConnect.toMillis())).build())
