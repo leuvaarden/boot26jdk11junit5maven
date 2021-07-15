@@ -7,7 +7,7 @@ public interface Response<T> {
         return null;
     }
 
-    default ErrorResponse.ErrorHolder getError() {
+    default ErrorHolder getError() {
         return null;
     }
 }

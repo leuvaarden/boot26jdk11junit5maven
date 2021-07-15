@@ -12,7 +12,7 @@ import java.security.KeyStore;
 
 @Configuration
 @ConditionalOnProperty("server.ssl.trust-store")
-public class TruststoreConfig {
+public class TrustStoreConfig {
 
     @Value("${server.ssl.trust-store}")
     private Resource trustStore;

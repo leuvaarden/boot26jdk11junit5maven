@@ -1,5 +1,6 @@
 package com.github.leuvaarden.sample.controller;
 
+import com.github.leuvaarden.sample.dto.ErrorHolder;
 import com.github.leuvaarden.sample.dto.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +17,9 @@ public class ExampleExceptionHandler {
 
     @ExceptionHandler
     public ResponseEntity<ErrorResponse<Object>> handleException(@NotNull Exception e) {
-        ErrorResponse.ErrorHolder error = new ErrorResponse.ErrorHolder("500", e.getMessage(), "Internal server error");
-        return new ResponseEntity<>(new ErrorResponse<>(error), HttpStatus.OK);
+        logger.error("Caught", e);
+        ErrorHolder errorHolder = new ErrorHolder("500", e.getMessage(), "Internal server error");
+        logger.info("Returning error: [{}]", errorHolder);
+        return new ResponseEntity<>(new ErrorResponse<>(errorHolder), HttpStatus.OK);
     }
 }

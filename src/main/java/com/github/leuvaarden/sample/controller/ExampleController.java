@@ -1,5 +1,6 @@
 package com.github.leuvaarden.sample.controller;
 
+import com.github.leuvaarden.sample.dto.ErrorHolder;
 import com.github.leuvaarden.sample.dto.ErrorResponse;
 import com.github.leuvaarden.sample.dto.Response;
 import com.github.leuvaarden.sample.dto.SuccessResponse;
@@ -30,16 +31,15 @@ public class ExampleController implements ExampleControllerMeta {
         logger.info("Received city: [{}]", city);
         try {
             ResponseEntity<WeatherResponse> responseEntity = restTemplate.getForEntity(WEATHER_URL + city, WeatherResponse.class);
-            logger.info("Received responseEntity: [{}]", responseEntity);
             logger.info("Returning data: [{}]", responseEntity.getBody());
             return new SuccessResponse<>(responseEntity.getBody());
         } catch (HttpClientErrorException e) {
-            ErrorResponse.ErrorHolder errorHolder = new ErrorResponse.ErrorHolder(String.valueOf(e.getRawStatusCode()), e.getResponseBodyAsString(), "Bad request");
+            ErrorHolder errorHolder = new ErrorHolder(String.valueOf(e.getRawStatusCode()), e.getResponseBodyAsString(), "Bad request");
             logger.info("Returning error: [{}]", errorHolder);
             return new ErrorResponse<>(errorHolder);
         } catch (HttpServerErrorException | UnknownHttpStatusCodeException e) {
-            logger.error("Received", e);
-            ErrorResponse.ErrorHolder errorHolder = new ErrorResponse.ErrorHolder(String.valueOf(e.getRawStatusCode()), e.getResponseBodyAsString(), "Internal server error");
+            logger.error("Caught", e);
+            ErrorHolder errorHolder = new ErrorHolder(String.valueOf(e.getRawStatusCode()), e.getResponseBodyAsString(), "Internal server error");
             logger.info("Returning error: [{}]", errorHolder);
             return new ErrorResponse<>(errorHolder);
         }
