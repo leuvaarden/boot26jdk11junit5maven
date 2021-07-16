@@ -23,7 +23,7 @@ import java.time.Duration;
 
 @Configuration
 @EnableCaching
-public class HttpConfig {
+public class HttpClientConfig {
 
     @Value("${http.timeout.connect:10S}")
     private Duration timeoutConnect;
@@ -35,11 +35,11 @@ public class HttpConfig {
     private int countRetry;
     @Value("${http.proxy.uri:#{null}}")
     private URI proxyUri;
-    @Value("${http.verify.hostname:true}")
-    private boolean verifyHostname;
+    @Value("${http.trust.all:false}")
+    private boolean trustAll;
 
     @Bean
-    public ClientHttpRequestFactory httpComponentsRequestFactory(HttpClient httpClient) throws NoSuchAlgorithmException {
+    public ClientHttpRequestFactory httpComponentsRequestFactory(HttpClient httpClient) {
         return new HttpComponentsClientHttpRequestFactory(httpClient);
     }
 
@@ -52,7 +52,7 @@ public class HttpConfig {
                 .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(Math.toIntExact(timeoutConnect.toMillis())).setConnectionRequestTimeout(Math.toIntExact(timeoutConnect.toMillis())).build())
                 .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(Math.toIntExact(timeoutRead.toMillis())).build())
                 .setSSLContext(sslContext != null ? sslContext : SSLContext.getDefault())
-                .setSSLHostnameVerifier(verifyHostname ? null : NoopHostnameVerifier.INSTANCE)
+                .setSSLHostnameVerifier(trustAll ? NoopHostnameVerifier.INSTANCE : null)
                 .setMaxConnTotal(poolSize)
                 .setMaxConnPerRoute(poolSize)
                 .setProxy(proxyUri == null ? null : new HttpHost(proxyUri.getHost(), getProxyUriPort(), proxyUri.getScheme()))
