@@ -9,6 +9,7 @@ import com.github.leuvaarden.sample.dto.SuccessResponse;
 import com.github.leuvaarden.sample.dto.WeatherResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -66,5 +67,10 @@ public class ExampleController implements ExampleControllerMeta {
             logger.info("Returning error: [{}]", errorHolder);
             return new ErrorResponse<>(errorHolder);
         }
+    }
+
+    @Override
+    public Response<Object> getCredentials(@NotNull Authentication authentication) {
+        return new SuccessResponse<>(authentication.getCredentials());
     }
 }

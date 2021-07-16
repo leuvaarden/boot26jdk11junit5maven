@@ -6,6 +6,8 @@ import com.github.leuvaarden.sample.dto.WeatherResponse;
 import net.rossillo.spring.web.mvc.CacheControl;
 import net.rossillo.spring.web.mvc.CachePolicy;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,10 +23,15 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @RequestMapping(value = "/", produces = APPLICATION_JSON_VALUE)
 public interface ExampleControllerMeta {
     @GetMapping("/weather")
-    @CacheControl(maxAge = 60 * 10, policy = CachePolicy.PRIVATE)
+    @CacheControl(maxAge = 60 * 10, policy = CachePolicy.PUBLIC)
     Response<WeatherResponse> getWeather(@NotNull @RequestParam String city);
 
     @GetMapping("/currency")
-    @CacheControl(maxAge = 60 * 10, policy = CachePolicy.PRIVATE)
-    Response<Map<Currency, Double>> getRates(@RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date, @NotNull @RequestParam Currency currency);
+    Response<Map<Currency, Double>> getRates(
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date,
+            @RequestParam @NotNull Currency currency);
+
+    @GetMapping("/credentials")
+    @PreAuthorize("isAuthenticated()")
+    Response<Object> getCredentials(@NotNull Authentication authentication);
 }

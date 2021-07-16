@@ -5,6 +5,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.annotation.Resource;
@@ -35,7 +36,7 @@ class AppTest {
     @Test
     void testWeatherError() throws Exception {
         mockMvc.perform(get("/weather")
-                .param("city", "Invalid")
+                .param("city", "404")
                 .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -62,6 +63,23 @@ class AppTest {
                 .param("currency", "eur")
                 .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
                 .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success", is(false)))
+                .andExpect(jsonPath("$.error").isNotEmpty());
+    }
+
+    @Test
+    @WithMockUser
+    void testCredentialsSuccess() throws Exception {
+        mockMvc.perform(get("/credentials"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.success", is(true)))
+                .andExpect(jsonPath("$.data").isNotEmpty());
+    }
+
+    @Test
+    void testCredentialsError() throws Exception {
+        mockMvc.perform(get("/credentials"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success", is(false)))
                 .andExpect(jsonPath("$.error").isNotEmpty());
