@@ -79,6 +79,30 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>keytool-maven-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generateKeyPair</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <keystore>${project.build.outputDirectory}/keystore.p12</keystore>
+                    <storepass>password</storepass>
+                    <storetype>PKCS12</storetype>
+                    <alias>self-signed</alias>
+                    <dname>cn=www.example.com, ou=None, L=Seattle, ST=Washington, o=ExampleOrg, c=US</dname>
+                    <keyalg>RSA</keyalg>
+                    <keysize>2048</keysize>
+                    <sigalg>SHA256withRSA</sigalg>
+                    <validity>9999</validity>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

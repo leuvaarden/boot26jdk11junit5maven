@@ -8,13 +8,16 @@ import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
 import org.apache.http.impl.client.cache.CacheConfig;
 import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 
+import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -35,8 +38,6 @@ public class HttpClientConfig {
     private int countRetry;
     @Value("${http.proxy.uri:#{null}}")
     private URI proxyUri;
-    @Value("${http.trust.all:false}")
-    private boolean trustAll;
 
     @Bean
     public ClientHttpRequestFactory httpComponentsRequestFactory(HttpClient httpClient) {
@@ -44,7 +45,13 @@ public class HttpClientConfig {
     }
 
     @Bean
-    public HttpClient httpClient(SSLContext sslContext) throws NoSuchAlgorithmException {
+    @ConditionalOnProperty(value = "http.verify.cn", havingValue = "false")
+    public HostnameVerifier trustAllHostnameVerifier() {
+        return NoopHostnameVerifier.INSTANCE;
+    }
+
+    @Bean
+    public HttpClient httpClient(SSLContext sslContext, @Autowired(required = false) HostnameVerifier hostnameVerifier) throws NoSuchAlgorithmException {
         return CachingHttpClientBuilder.create()
                 .setCacheConfig(CacheConfig.DEFAULT)
                 .useSystemProperties()
@@ -52,7 +59,7 @@ public class HttpClientConfig {
                 .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(Math.toIntExact(timeoutConnect.toMillis())).setConnectionRequestTimeout(Math.toIntExact(timeoutConnect.toMillis())).build())
                 .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(Math.toIntExact(timeoutRead.toMillis())).build())
                 .setSSLContext(sslContext != null ? sslContext : SSLContext.getDefault())
-                .setSSLHostnameVerifier(trustAll ? NoopHostnameVerifier.INSTANCE : null)
+                .setSSLHostnameVerifier(hostnameVerifier)
                 .setMaxConnTotal(poolSize)
                 .setMaxConnPerRoute(poolSize)
                 .setProxy(proxyUri == null ? null : new HttpHost(proxyUri.getHost(), getProxyUriPort(), proxyUri.getScheme()))

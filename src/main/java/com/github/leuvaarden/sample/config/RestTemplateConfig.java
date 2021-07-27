@@ -7,7 +7,8 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.client.ClientHttpRequestFactory;
@@ -23,18 +24,18 @@ import java.util.List;
 @Configuration
 public class RestTemplateConfig {
 
-    @Value("${http.trust.all:false}")
-    private boolean trustAll;
+    @Bean
+    @ConditionalOnProperty(value = "http.trust.all", havingValue = "true")
+    public SSLContext trustAllSslContext() throws GeneralSecurityException {
+        return SSLContextBuilder.create()
+                .loadTrustMaterial(TrustAllStrategy.INSTANCE)
+                .build();
+    }
 
     @Bean
-    public SSLContext sslContext() throws GeneralSecurityException {
-        if (trustAll) {
-            return SSLContextBuilder.create()
-                    .loadTrustMaterial(TrustAllStrategy.INSTANCE)
-                    .build();
-        } else {
-            return SSLContext.getDefault();
-        }
+    @ConditionalOnMissingBean(SSLContext.class)
+    public SSLContext defaultSslContext() throws GeneralSecurityException {
+        return SSLContext.getDefault();
     }
 
     @Bean
