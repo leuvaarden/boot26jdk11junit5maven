@@ -5,11 +5,14 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.config.SocketConfig;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
+import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.impl.client.StandardHttpRequestRetryHandler;
 import org.apache.http.impl.client.cache.CacheConfig;
 import org.apache.http.impl.client.cache.CachingHttpClientBuilder;
+import org.apache.http.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -21,6 +24,7 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.security.GeneralSecurityException;
 import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 
@@ -42,6 +46,20 @@ public class HttpClientConfig {
     @Bean
     public ClientHttpRequestFactory httpComponentsRequestFactory(HttpClient httpClient) {
         return new HttpComponentsClientHttpRequestFactory(httpClient);
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "http.trust.all", havingValue = "true")
+    public SSLContext trustAllSslContext() throws GeneralSecurityException {
+        return SSLContextBuilder.create()
+                .loadTrustMaterial(TrustAllStrategy.INSTANCE)
+                .build();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SSLContext.class)
+    public SSLContext defaultSslContext() throws GeneralSecurityException {
+        return SSLContext.getDefault();
     }
 
     @Bean
