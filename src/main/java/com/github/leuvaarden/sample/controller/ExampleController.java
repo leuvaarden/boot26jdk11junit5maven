@@ -1,5 +1,7 @@
 package com.github.leuvaarden.sample.controller;
 
+import com.github.leuvaarden.sample.dao.ExampleEntity;
+import com.github.leuvaarden.sample.dao.ExampleEntityRepository;
 import com.github.leuvaarden.sample.dto.Currency;
 import com.github.leuvaarden.sample.dto.CurrencyResponse;
 import com.github.leuvaarden.sample.dto.ErrorHolder;
@@ -30,6 +32,8 @@ public class ExampleController implements ExampleControllerMeta {
 
     @Resource
     private RestTemplate restTemplate;
+    @Resource
+    private ExampleEntityRepository exampleEntityRepository;
 
     @Override
     public Response<WeatherResponse> getWeather(@NotNull String city) {
@@ -72,5 +76,20 @@ public class ExampleController implements ExampleControllerMeta {
     @Override
     public Response<Object> getCredentials(@NotNull Authentication authentication) {
         return new SuccessResponse<>(authentication.getCredentials());
+    }
+
+    @Override
+    public Response<ExampleEntity> createEntity(String value) {
+        ExampleEntity exampleEntity = new ExampleEntity();
+        exampleEntity.setValue(value);
+        return new SuccessResponse<>(exampleEntityRepository.save(exampleEntity));
+    }
+
+    @Override
+    public Response<ExampleEntity> getEntity(long id) {
+        return exampleEntityRepository.findById(id)
+                .map(SuccessResponse::new)
+                .map(response -> (Response<ExampleEntity>) response)
+                .orElse(new ErrorResponse<>(new ErrorHolder("404", "Not found", "Not found")));
     }
 }

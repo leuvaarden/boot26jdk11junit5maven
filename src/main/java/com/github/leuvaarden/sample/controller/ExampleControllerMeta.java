@@ -1,5 +1,6 @@
 package com.github.leuvaarden.sample.controller;
 
+import com.github.leuvaarden.sample.dao.ExampleEntity;
 import com.github.leuvaarden.sample.dto.Currency;
 import com.github.leuvaarden.sample.dto.Response;
 import com.github.leuvaarden.sample.dto.WeatherResponse;
@@ -10,6 +11,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -34,4 +37,10 @@ public interface ExampleControllerMeta {
     @GetMapping("/credentials")
     @PreAuthorize("isAuthenticated()")
     Response<Object> getCredentials(@NotNull Authentication authentication);
+
+    @PostMapping("/entity")
+    Response<ExampleEntity> createEntity(@NotNull @RequestParam String value);
+
+    @GetMapping("/entity/{id}")
+    Response<ExampleEntity> getEntity(@PathVariable long id);
 }
