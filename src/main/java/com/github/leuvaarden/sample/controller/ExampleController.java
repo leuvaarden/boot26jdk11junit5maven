@@ -2,13 +2,13 @@ package com.github.leuvaarden.sample.controller;
 
 import com.github.leuvaarden.sample.dao.ExampleEntity;
 import com.github.leuvaarden.sample.dao.ExampleEntityRepository;
-import com.github.leuvaarden.sample.dto.Currency;
-import com.github.leuvaarden.sample.dto.CurrencyResponse;
 import com.github.leuvaarden.sample.dto.ErrorHolder;
 import com.github.leuvaarden.sample.dto.ErrorResponse;
 import com.github.leuvaarden.sample.dto.Response;
 import com.github.leuvaarden.sample.dto.SuccessResponse;
-import com.github.leuvaarden.sample.dto.WeatherResponse;
+import com.github.leuvaarden.sample.dto.currency.Currency;
+import com.github.leuvaarden.sample.dto.currency.CurrencyResponse;
+import com.github.leuvaarden.sample.dto.weather.WeatherResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;

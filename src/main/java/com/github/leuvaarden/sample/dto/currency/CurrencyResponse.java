@@ -1,4 +1,4 @@
-package com.github.leuvaarden.sample.dto;
+package com.github.leuvaarden.sample.dto.currency;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Data;
