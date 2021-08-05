@@ -13,8 +13,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
-@TestPropertySource(properties = {"http.trust.all=true", "http.verify.cn=false"})
-public class RestTemplateTest {
+@TestPropertySource(properties = {
+        "http.trust.all=true",
+        "http.verify.cn=false"})
+public class TrustAllTest {
 
     @Resource
     private RestTemplate restTemplate;

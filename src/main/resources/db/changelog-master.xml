@@ -10,15 +10,15 @@
                 <tableExists tableName="EXAMPLE_ENTITY"/>
             </not>
         </preConditions>
-        <createTable tableName="EXAMPLE_ENTITY">
-            <column type="bigint" name="ID">
-                <constraints primaryKey="true" nullable="false"/>
+        <createTable tableName="example_entity">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_example_entity"/>
             </column>
-            <column type="varchar" name="VALUE">
+            <column name="value" type="VARCHAR(255)">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <createSequence sequenceName="EXAMPLE_SEQUENCE"/>
+        <createSequence sequenceName="example_sequence" startValue="1" incrementBy="50"/>
         <rollback/>
     </changeSet>
     <changeSet id="c2e26794-e6ac-4a86-aab2-97c77963902d" context="second" author="leuvaarden"/>
