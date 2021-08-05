@@ -1,7 +1,7 @@
 package com.github.leuvaarden.sample.controller;
 
-import com.github.leuvaarden.sample.dto.ErrorHolder;
-import com.github.leuvaarden.sample.dto.ErrorResponse;
+import com.github.leuvaarden.sample.dto.common.ErrorHolder;
+import com.github.leuvaarden.sample.dto.common.ErrorResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,7 +19,7 @@ public class ExampleExceptionHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ErrorResponse<Object>> handleAccessDeniedException(@NotNull AccessDeniedException e) {
         logger.error("Caught", e);
-        ErrorHolder errorHolder = new ErrorHolder("401", e.getMessage(), "Access denied");
+        ErrorHolder errorHolder = new ErrorHolder(401, e.getMessage(), "Access denied");
         logger.info("Returning error: [{}]", errorHolder);
         return new ResponseEntity<>(new ErrorResponse<>(errorHolder), HttpStatus.OK);
     }
@@ -27,7 +27,7 @@ public class ExampleExceptionHandler {
     @ExceptionHandler
     public ResponseEntity<ErrorResponse<Object>> handleException(@NotNull Exception e) {
         logger.error("Caught", e);
-        ErrorHolder errorHolder = new ErrorHolder("500", e.getMessage(), "Internal server error");
+        ErrorHolder errorHolder = new ErrorHolder(500, e.getMessage(), "Internal server error");
         logger.info("Returning error: [{}]", errorHolder);
         return new ResponseEntity<>(new ErrorResponse<>(errorHolder), HttpStatus.OK);
     }

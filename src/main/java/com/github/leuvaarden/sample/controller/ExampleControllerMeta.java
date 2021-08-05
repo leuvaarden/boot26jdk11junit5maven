@@ -1,7 +1,7 @@
 package com.github.leuvaarden.sample.controller;
 
 import com.github.leuvaarden.sample.dao.ExampleEntity;
-import com.github.leuvaarden.sample.dto.Response;
+import com.github.leuvaarden.sample.dto.common.Response;
 import com.github.leuvaarden.sample.dto.currency.Currency;
 import com.github.leuvaarden.sample.dto.weather.WeatherResponse;
 import io.swagger.annotations.ApiOperation;

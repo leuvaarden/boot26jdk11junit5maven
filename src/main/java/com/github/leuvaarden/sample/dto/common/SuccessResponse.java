@@ -1,4 +1,4 @@
-package com.github.leuvaarden.sample.dto;
+package com.github.leuvaarden.sample.dto.common;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

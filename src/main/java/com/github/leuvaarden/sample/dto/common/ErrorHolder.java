@@ -1,4 +1,4 @@
-package com.github.leuvaarden.sample.dto;
+package com.github.leuvaarden.sample.dto.common;
 
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 public class ErrorHolder {
     @NotNull
     @ApiModelProperty(value = "Error code", example = "400")
-    private final String code;
+    private final int code;
     @NotNull
     @ApiModelProperty(value = "System description", example = "FileNotFoundException")
     private final String description;

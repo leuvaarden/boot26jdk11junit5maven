@@ -2,10 +2,10 @@ package com.github.leuvaarden.sample.controller;
 
 import com.github.leuvaarden.sample.dao.ExampleEntity;
 import com.github.leuvaarden.sample.dao.ExampleEntityRepository;
-import com.github.leuvaarden.sample.dto.ErrorHolder;
-import com.github.leuvaarden.sample.dto.ErrorResponse;
-import com.github.leuvaarden.sample.dto.Response;
-import com.github.leuvaarden.sample.dto.SuccessResponse;
+import com.github.leuvaarden.sample.dto.common.ErrorHolder;
+import com.github.leuvaarden.sample.dto.common.ErrorResponse;
+import com.github.leuvaarden.sample.dto.common.Response;
+import com.github.leuvaarden.sample.dto.common.SuccessResponse;
 import com.github.leuvaarden.sample.dto.currency.Currency;
 import com.github.leuvaarden.sample.dto.currency.CurrencyResponse;
 import com.github.leuvaarden.sample.dto.weather.WeatherResponse;
@@ -43,12 +43,12 @@ public class ExampleController implements ExampleControllerMeta {
             logger.info("Returning data: [{}]", weatherResponse);
             return new SuccessResponse<>(weatherResponse);
         } catch (HttpClientErrorException e) {
-            ErrorHolder errorHolder = new ErrorHolder(String.valueOf(e.getRawStatusCode()), e.getResponseBodyAsString(), "Bad request");
+            ErrorHolder errorHolder = new ErrorHolder(e.getRawStatusCode(), e.getResponseBodyAsString(), "Bad request");
             logger.info("Returning error: [{}]", errorHolder);
             return new ErrorResponse<>(errorHolder);
         } catch (HttpServerErrorException | UnknownHttpStatusCodeException e) {
             logger.error("Caught", e);
-            ErrorHolder errorHolder = new ErrorHolder(String.valueOf(e.getRawStatusCode()), e.getResponseBodyAsString(), "Internal server error");
+            ErrorHolder errorHolder = new ErrorHolder(e.getRawStatusCode(), e.getResponseBodyAsString(), "Internal server error");
             logger.info("Returning error: [{}]", errorHolder);
             return new ErrorResponse<>(errorHolder);
         }
@@ -62,12 +62,12 @@ public class ExampleController implements ExampleControllerMeta {
             logger.info("Returning data: [{}]", currencyResponse);
             return new SuccessResponse<>(currencyResponse.getPayload());
         } catch (HttpClientErrorException e) {
-            ErrorHolder errorHolder = new ErrorHolder(String.valueOf(e.getRawStatusCode()), e.getResponseBodyAsString(), "Bad request");
+            ErrorHolder errorHolder = new ErrorHolder(e.getRawStatusCode(), e.getResponseBodyAsString(), "Bad request");
             logger.info("Returning error: [{}]", errorHolder);
             return new ErrorResponse<>(errorHolder);
         } catch (HttpServerErrorException | UnknownHttpStatusCodeException e) {
             logger.error("Caught", e);
-            ErrorHolder errorHolder = new ErrorHolder(String.valueOf(e.getRawStatusCode()), e.getResponseBodyAsString(), "Internal server error");
+            ErrorHolder errorHolder = new ErrorHolder(e.getRawStatusCode(), e.getResponseBodyAsString(), "Internal server error");
             logger.info("Returning error: [{}]", errorHolder);
             return new ErrorResponse<>(errorHolder);
         }
@@ -90,6 +90,6 @@ public class ExampleController implements ExampleControllerMeta {
         return exampleEntityRepository.findById(id)
                 .map(SuccessResponse::new)
                 .map(response -> (Response<ExampleEntity>) response)
-                .orElse(new ErrorResponse<>(new ErrorHolder("404", "Not found", "Not found")));
+                .orElse(new ErrorResponse<>(new ErrorHolder(404, "Not found", "Not found")));
     }
 }
