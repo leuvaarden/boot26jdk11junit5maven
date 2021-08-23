@@ -1,13 +1,12 @@
 package com.github.leuvaarden.sample;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@Slf4j
 @SpringBootApplication
 public class App {
-    private static final Logger logger = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) {
         Thread.setDefaultUncaughtExceptionHandler(new GlobalUncaughtExceptionHandler());

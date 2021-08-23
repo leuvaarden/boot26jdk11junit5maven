@@ -1,16 +1,14 @@
 package com.github.leuvaarden.sample.dto.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
 
 import javax.validation.constraints.NotNull;
 
-@Data
-@AllArgsConstructor
+@Value
 public class SuccessResponse<T> implements Response<T> {
 
     @NotNull
-    private final T data;
+    T data;
 
     @Override
     public boolean getSuccess() {

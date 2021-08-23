@@ -27,9 +27,9 @@ class AppTest {
     @Test
     void testWeatherSuccess() throws Exception {
         mockMvc.perform(get("/weather")
-                .param("city", "Moscow")
-                .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
-                .accept(MediaType.APPLICATION_JSON))
+                        .param("city", "Moscow")
+                        .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success", is(true)))
                 .andExpect(jsonPath("$.data").isNotEmpty());
@@ -39,33 +39,9 @@ class AppTest {
     @Disabled
     void testWeatherError() throws Exception {
         mockMvc.perform(get("/weather")
-                .param("city", UUID.randomUUID().toString())
-                .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success", is(false)))
-                .andExpect(jsonPath("$.error").isNotEmpty());
-    }
-
-    @Test
-    void testCurrencySuccess() throws Exception {
-        mockMvc.perform(get("/currency")
-                .param("date", "2021-07-14")
-                .param("currency", "eur")
-                .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.success", is(true)))
-                .andExpect(jsonPath("$.data").isNotEmpty());
-    }
-
-    @Test
-    void testCurrencyError() throws Exception {
-        mockMvc.perform(get("/currency")
-                .param("date", "2010-07-14")
-                .param("currency", "eur")
-                .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
-                .accept(MediaType.APPLICATION_JSON))
+                        .param("city", UUID.randomUUID().toString())
+                        .header(HttpHeaders.ACCEPT_ENCODING, "gzip")
+                        .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.success", is(false)))
                 .andExpect(jsonPath("$.error").isNotEmpty());
