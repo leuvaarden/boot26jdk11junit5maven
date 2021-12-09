@@ -16,9 +16,14 @@
 
     <properties>
         <java.version>11</java.version>
+        <cache-control.version>1.1.1-RELEASE</cache-control.version>
+        <springdoc.version>1.5.12</springdoc.version>
+        <annotations.version>22.0.0</annotations.version>
+        <keytool.version>1.5</keytool.version>
     </properties>
 
     <dependencies>
+        <!--SPRING-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -46,10 +51,10 @@
             <artifactId>spring-boot-starter-oauth2-resource-server</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.5.12</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <!--DB-->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
@@ -58,6 +63,7 @@
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>
+        <!--MISC-->
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
@@ -67,20 +73,26 @@
             <artifactId>httpclient-cache</artifactId>
         </dependency>
         <dependency>
+            <groupId>net.rossillo.mvc.cache</groupId>
+            <artifactId>spring-mvc-cache-control</artifactId>
+            <version>${cache-control.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>net.rossillo.mvc.cache</groupId>
-            <artifactId>spring-mvc-cache-control</artifactId>
-            <version>1.1.1-RELEASE</version>
-        </dependency>
-        <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>22.0.0</version>
+            <version>${annotations.version}</version>
         </dependency>
+        <!--TEST-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -109,7 +121,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>keytool-maven-plugin</artifactId>
-                <version>1.5</version>
+                <version>${keytool.version}</version>
                 <executions>
                     <execution>
                         <goals>

@@ -19,7 +19,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.security.NoSuchAlgorithmException;
 import java.time.Duration;
 
 @Configuration
@@ -43,14 +42,21 @@ public class HttpClientConfig {
     }
 
     @Bean
-    public HttpClient httpClient(SSLContext sslContext, @Autowired(required = false) HostnameVerifier hostnameVerifier) throws NoSuchAlgorithmException {
+    public HttpClient httpClient(SSLContext sslContext, @Autowired(required = false) HostnameVerifier hostnameVerifier) {
+        RequestConfig requestConfig = RequestConfig.custom()
+                .setConnectTimeout(Math.toIntExact(timeoutConnect.toMillis()))
+                .setConnectionRequestTimeout(Math.toIntExact(timeoutConnect.toMillis()))
+                .build();
+        SocketConfig socketConfig = SocketConfig.custom()
+                .setSoTimeout(Math.toIntExact(timeoutRead.toMillis()))
+                .build();
         return CachingHttpClientBuilder.create()
                 .setCacheConfig(CacheConfig.DEFAULT)
                 .useSystemProperties()
                 .setRetryHandler(countRetry == 0 ? null : new StandardHttpRequestRetryHandler(countRetry, true))
-                .setDefaultRequestConfig(RequestConfig.custom().setConnectTimeout(Math.toIntExact(timeoutConnect.toMillis())).setConnectionRequestTimeout(Math.toIntExact(timeoutConnect.toMillis())).build())
-                .setDefaultSocketConfig(SocketConfig.custom().setSoTimeout(Math.toIntExact(timeoutRead.toMillis())).build())
-                .setSSLContext(sslContext != null ? sslContext : SSLContext.getDefault())
+                .setDefaultRequestConfig(requestConfig)
+                .setDefaultSocketConfig(socketConfig)
+                .setSSLContext(sslContext)
                 .setSSLHostnameVerifier(hostnameVerifier)
                 .setMaxConnTotal(poolSize)
                 .setMaxConnPerRoute(poolSize)
