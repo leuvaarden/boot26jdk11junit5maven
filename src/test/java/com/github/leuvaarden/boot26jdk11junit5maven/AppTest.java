@@ -25,6 +25,7 @@ class AppTest {
     private MockMvc mockMvc;
 
     @Test
+    @Disabled("Flaky")
     void testWeatherSuccess() throws Exception {
         mockMvc.perform(get("/weather")
                         .param("city", "Moscow")

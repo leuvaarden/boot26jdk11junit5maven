@@ -6,7 +6,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.annotation.Resource;
 
@@ -22,12 +22,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 class TrustStoreTest {
 
     @Resource
-    private RestTemplate restTemplate;
+    private WebClient weatherWebClient;
 
     @ParameterizedTest
     @ValueSource(strings = {"https://self-signed.badssl.com/", "https://expired.badssl.com/", "https://wrong.host.badssl.com/"})
     void testTrustStore(String url) {
-        ResponseEntity<String> responseEntity = restTemplate.getForEntity(url, String.class);
+        ResponseEntity<String> responseEntity = weatherWebClient.get()
+                .uri(url)
+                .retrieve()
+                .toEntity(String.class)
+                .block();
+        assertNotNull(responseEntity);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
         assertNotNull(responseEntity.getBody());
     }

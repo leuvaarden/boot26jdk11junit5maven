@@ -19,7 +19,6 @@
         <cache-control.version>1.1.1-RELEASE</cache-control.version>
         <springdoc.version>1.5.12</springdoc.version>
         <annotations.version>22.0.0</annotations.version>
-        <keytool.version>1.5</keytool.version>
     </properties>
 
     <dependencies>
@@ -31,6 +30,16 @@
                 <exclusion>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-starter-tomcat</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-webflux</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-reactor-netty</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -54,6 +63,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
         <!--DB-->
         <dependency>
             <groupId>com.h2database</groupId>
@@ -65,17 +79,16 @@
         </dependency>
         <!--MISC-->
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient-cache</artifactId>
+            <groupId>org.apache.httpcomponents.core5</groupId>
+            <artifactId>httpcore5-reactive</artifactId>
         </dependency>
         <dependency>
-            <groupId>net.rossillo.mvc.cache</groupId>
-            <artifactId>spring-mvc-cache-control</artifactId>
-            <version>${cache-control.version}</version>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-reactive-httpclient</artifactId>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -125,30 +138,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>keytool-maven-plugin</artifactId>
-                <version>${keytool.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generateKeyPair</goal>
-                        </goals>
-                        <phase>generate-resources</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <keystore>${project.build.outputDirectory}/keystore.p12</keystore>
-                    <storepass>password</storepass>
-                    <storetype>PKCS12</storetype>
-                    <alias>self-signed</alias>
-                    <dname>cn=www.example.com, ou=None, L=Seattle, ST=Washington, o=ExampleOrg, c=US</dname>
-                    <keyalg>RSA</keyalg>
-                    <keysize>2048</keysize>
-                    <sigalg>SHA256withRSA</sigalg>
-                    <validity>9999</validity>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -9,7 +9,9 @@ import com.github.leuvaarden.boot26jdk11junit5maven.dto.weather.WeatherResponse;
 import com.github.leuvaarden.boot26jdk11junit5maven.service.ExampleEntityService;
 import com.github.leuvaarden.boot26jdk11junit5maven.service.WeatherService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
@@ -20,7 +22,7 @@ import javax.validation.constraints.NotNull;
 
 @Slf4j
 @RestController
-public class ExampleController implements ExampleControllerMeta {
+public class ExampleServiceController implements ExampleServiceMeta {
 
     @Resource
     private WeatherService weatherService;
@@ -29,7 +31,6 @@ public class ExampleController implements ExampleControllerMeta {
 
     @Override
     public Response<WeatherResponse> getWeather(@NotNull String city) {
-        logger.info("Received city: [{}]", city);
         try {
             WeatherResponse weatherResponse = weatherService.get(city);
             logger.info("Returning data: [{}]", weatherResponse);
@@ -47,7 +48,9 @@ public class ExampleController implements ExampleControllerMeta {
     }
 
     @Override
-    public Response<Object> getCredentials(@NotNull Authentication authentication) {
+    @PreAuthorize("isAuthenticated()")
+    public Response<Object> getCredentials() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         return new SuccessResponse<>(authentication.getCredentials());
     }
 

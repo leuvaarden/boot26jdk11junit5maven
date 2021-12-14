@@ -1,8 +1,6 @@
-package com.github.leuvaarden.boot26jdk11junit5maven.config;
+package com.github.leuvaarden.boot26jdk11junit5maven.config.http;
 
-import org.apache.http.conn.ssl.NoopHostnameVerifier;
-import org.apache.http.conn.ssl.TrustAllStrategy;
-import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.hc.core5.ssl.SSLContextBuilder;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -22,7 +20,7 @@ public class SslContextConfig {
     @Bean
     @ConditionalOnProperty(value = "http.verify.cn", havingValue = "false")
     public HostnameVerifier trustAllHostnameVerifier() {
-        return NoopHostnameVerifier.INSTANCE;
+        return (hostname, session) -> true;
     }
 
     @Bean
@@ -44,7 +42,7 @@ public class SslContextConfig {
     @ConditionalOnProperty(value = "http.trust.all", havingValue = "true")
     public SSLContext trustAllSslContext() throws GeneralSecurityException {
         return SSLContextBuilder.create()
-                .loadTrustMaterial(TrustAllStrategy.INSTANCE)
+                .loadTrustMaterial((x509Certificates, s) -> true)
                 .build();
     }
 
